@@ -5,7 +5,7 @@ import pandas
 st.set_page_config(layout="wide")
 
 # Add a header and some other text
-st.header("health credit")
+st.header("The Best Company")
 st.write("""
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
 tempor incididunt ut labore et dolore magna aliqua. 
