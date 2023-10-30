@@ -38,11 +38,12 @@ def search():
             }
             
             doctors.append(doctor_info)
-
-        return render_template('result.html', doctors=doctors)
-
     else:
         return "Request failed with status code: " + str(response.status_code)
 
+
+    return render_template('result.html', doctors=doctors)
+
+    
 if __name__ == '__main__':
     app.run(debug=True)
