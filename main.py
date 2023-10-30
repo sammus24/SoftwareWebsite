@@ -7,7 +7,7 @@ app = Flask(__name)
 def index():
     return render_template('index.html')
 
-@app.route('/search', methods=['GET','POST'])
+@app.route('/result', methods=['GET','POST'])
 def search():
     zip_code = request.form['zip_code']
     provider = request.form['provider']
@@ -20,7 +20,7 @@ def search():
 
     if response.status_code == 200:
         data = response.json()
-        results = data.get("results", [])
+        results = data.get("result", [])
 
         doctors = []  # Create a list to store the doctor information
 
