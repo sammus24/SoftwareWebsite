@@ -2,30 +2,19 @@
 <html>
 <head>
     <title>Healthcare Provider Search</title>
-    <style>
-        .button-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
     <h1>Healthcare Provider Search</h1>
-    <form action="main.py" method="post">
+    <form action="/result" method="post">
         <label for="zip_code">Enter ZIP code:</label>
         <input type="text" name="zip_code" id="zip_code" required>
         <br>
         <label for="provider">Enter Provider Type:</label>
         <input type="text" name="provider" id="provider" required>
         <br>
-        <!-- Replace the submit button with an anchor tag -->
-        <a href="./result" class="button-link" onclick="submitForm()">result</a>
+        <input type="submit" value="Search">
     </form>
+    
 
     <script>
         function submitForm() {
