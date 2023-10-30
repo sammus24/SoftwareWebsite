@@ -7,7 +7,7 @@ app = Flask(__name)
 def index():
     return render_template('index.html')
 
-@app.route('/search', methods=['POST'])
+@app.route('/search', methods=['GET','POST'])
 def search():
     zip_code = request.form['zip_code']
     provider = request.form['provider']
