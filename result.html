@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results</h1>
+    <p>Results:</p>
+    <ul>
+        {% for doctor in doctors %}
+        <li>
+            Doctor's Name: {{ doctor.first_name }} {{ doctor.last_name }}<br>
+            Address: {{ doctor.address }}
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
