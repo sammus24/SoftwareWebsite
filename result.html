@@ -8,8 +8,8 @@
     <ul>
         {% for doctor in doctors %}
             <li>
-                <strong>Name:</strong> {{ doctor.first_name }} {{ doctor.last_name }}<br>
-                <strong>Address:</strong> {{ doctor.address }}
+                <strong>Name:</strong> {{ doctor.get('first_name', 'N/A') }} {{ doctor.get('last_name', 'N/A') }}<br>
+                <strong>Address:</strong> {{ doctor.get('address', 'N/A') }}
             </li>
         {% endfor %}
     </ul>
