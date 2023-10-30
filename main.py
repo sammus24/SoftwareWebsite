@@ -39,7 +39,7 @@ def search():
             
             doctors.append(doctor_info)
 
-        return render_template('results.html', doctors=doctors)
+        return render_template('result.html', doctors=doctors)
 
     else:
         return "Request failed with status code: " + str(response.status_code)
