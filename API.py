@@ -1,9 +1,12 @@
 import requests
 import json
 
+
+zip_code = input("Enter Zip code: ")
+provider = input("Enter Provider: ")
 parameters = {
-    "postal_code": "08054",
-    "taxonomy_description":"dentist"
+    "postal_code": zip_code,
+    "taxonomy_description": provider
 }
 
 response = requests.get("https://npiregistry.cms.hhs.gov/api/?pretty=on&enumeration_type=NPI-1&version=2.1", params=parameters)
