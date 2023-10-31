@@ -7,7 +7,7 @@ app = Flask(__name)
 def index():
     return render_template('index.html')
 
-@app.route('/results', methods=['GET','POST'])
+@app.route('/results', methods=['GET'])
 def results():
     if request.method == 'POST':
         zip_code = request.form['zip_code']
@@ -43,7 +43,7 @@ def results():
             return "Request failed with status code: " + str(response.status_code)
     else:
         doctors = []
-    return render_template('results.html', doctors=doctors)
+    return render_template('results.html', doctor=doctors)
 
     
 if __name__ == '__main__':
