@@ -5,7 +5,13 @@
 </head>
 <body>
     <h1>Search Results</h1>
-    <p>Name: {{ doctor.first_name }} {{ doctor.last_name }}</p>
-    <p>Address: {{ doctor.address }}</p>
+    <ul>
+        {% for doctor in doctors %}
+            <li>
+                <strong>Name:</strong> {{ doctor.first_name }} {{ doctor.last_name }}<br>
+                <strong>Address:</strong> {{ doctor.address }}
+            </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
