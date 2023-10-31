@@ -7,7 +7,7 @@ app = Flask(__name)
 def index():
     return render_template('index.html')
 
-@app.route('/results', methods=['GET'])
+@app.route('/results', methods=['GET','POST'])
 def results():
     if request.method == 'POST':
         zip_code = request.form['zip_code']
