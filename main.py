@@ -8,7 +8,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/results', methods=['GET','POST'])
-def search():
+def results():
     if request.method == 'POST':
         zip_code = request.form['zip_code']
         provider = request.form['provider']
