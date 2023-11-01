@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html' ,flash_message=True)
 
 @app.route('/SoftwareWebsite/results', methods=['GET','POST'])
 def results():
@@ -39,11 +39,11 @@ def results():
                 }
                 
                 doctors.append(doctor_info)
+            return render_template('results.html.j2', doctors=doctors, flash_message=True)
         else:
             return "Request failed with status code: " + str(response.status_code)
-    else:
-        doctors = []
-    return render_template('results.html.j2', doctors=doctors)
+   
+    
 
     
 if __name__ == '__main__':
