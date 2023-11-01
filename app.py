@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 import requests
 
-app = Flask(__name__,template_folder='_layouts')
+app = Flask(__name__)
 
 @app.route('/')
 def index():
