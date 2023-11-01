@@ -28,8 +28,8 @@
         </tr>
         {% for doctor in doctors %}
             <tr>
-                <td>{{ doctor}}</td>
-               
+                <td>{{ doctor.first_name }} {{ doctor.last_name }}</td>
+                <td>{{ doctor.address }}</td>
             </tr>
         {% endfor %}
     </table>
