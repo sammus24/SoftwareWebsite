@@ -43,7 +43,7 @@ def results():
             return "Request failed with status code: " + str(response.status_code)
     else:
         doctors = []
-    return render_template('results.html', doctors=doctors)
+    return render_template('results.html.j2', doctors=doctors)
 
     
 if __name__ == '__main__':
