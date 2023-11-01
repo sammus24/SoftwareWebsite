@@ -2,16 +2,42 @@
 <html>
 <head>
     <title>Search Results</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
     <h1>Search Results</h1>
-    <ul>
+
+    {% if flash_message %}
+    <p>{{ flash_message }}</p>
+    {% endif %}
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+        </tr>
         {% for doctor in doctors %}
-            <li>
-                <strong>Name:</strong> {{ doctor.first_name }} {{ doctor.last_name }}<br>
-                <strong>Address:</strong> {{ doctor.address }}
-            </li>
+            <tr>
+                <td>{{ doctor.first_name }} {{ doctor.last_name }}</td>
+                <td>{{ doctor.address }}</td>
+            </tr>
         {% endfor %}
-    </ul>
+    </table>
+
+    {% if not doctors %}
+        <p>No results found.</p>
+    {% endif}
+
+    <a href="/">Back to Search</a>
 </body>
 </html>
