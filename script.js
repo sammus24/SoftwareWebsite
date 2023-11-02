@@ -1,4 +1,4 @@
-function results() {
+/*function results() {
   const zipCode = document.getElementById('zip_code').value;
   const provider = document.getElementById('provider').value;
     
@@ -16,4 +16,4 @@ function results() {
       })
     .catch(error => console.error(error));
   }
-
+*/
