@@ -2,8 +2,8 @@ function results() {
   const zipCode = document.getElementById('zip_code').value;
   const provider = document.getElementById('provider').value;
     
-  fetch('app.py', {
-      method: 'GET',
+  fetch('/SoftwareWebsite/results-', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
