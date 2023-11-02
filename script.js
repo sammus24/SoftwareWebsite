@@ -3,7 +3,7 @@ function results() {
   const provider = document.getElementById('provider').value;
     
   fetch('/SoftwareWebsite/results', {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
