@@ -34,6 +34,5 @@ if response.status_code == 200:
 else:
     print("Request failed with status code:", response.status_code)
 
-for item in doctors:
-    print(item)
+
 
