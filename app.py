@@ -1,50 +1,29 @@
-from flask import Flask, render_template, request
-import requests
+import streamlit as st
+from API import search_healthcare_providers  # Import the function from your module
 
-app = Flask(__name__)
+# Function to display the search results page
+def display_search_results(zip_code, provider):
+    doctors = search_healthcare_providers(zip_code, provider)
+    st.title("Search Results")
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+    if doctors:
+        st.write("Search Results:")
+        st.table(doctors)
+    else:
+        st.write("No results found.")
+    st.write("Back to [Search](#search)")
 
-@app.route('/SoftwareWebsite/results', methods=['GET','POST'])
-def results():
-    if request.method == 'POST':
-        zip_code = request.form['zip_code']
-        provider = request.form['provider']
-        parameters = {
-            "postal_code": zip_code,
-            "taxonomy_description": provider
-        }
+# Function to display the search form page
+def display_search_form():
+    st.title("Healthcare Provider Search")
+    zip_code = st.text_input("Enter ZIP code:")
+    provider = st.text_input("Enter Provider Type:")
 
-        response = requests.get("https://npiregistry.cms.hhs.gov/api/?pretty=on&enumeration_type=NPI-1&version=2.1", params=parameters)
+    if st.button("Search"):
+        display_search_results(zip_code, provider)
 
-        if response.status_code == 200:
-            data = response.json()
-            results = data.get("result", [])
-
-            doctors = []  # Create a list to store the doctor information
-
-            for result in results:
-                first_name = result.get("basic", {}).get("first_name", "")
-                last_name = result.get("basic", {}).get("last_name", "")
-                
-                address_data = result.get("addresses", [{}])[0]
-                address = ", ".join(filter(None, [address_data.get("address_1", ""), address_data.get("address_2", ""), address_data.get("city", ""), address_data.get("state", ""), address_data.get("postal_code", "")]))
-                
-                doctor_info = {
-                    "first_name": first_name,
-                    "last_name": last_name,
-                    "address": address
-                }
-                
-                doctors.append(doctor_info)
-            return render_template('results.html', doctors=doctors)
-        else:
-            return "Request failed with status code: " + str(response.status_code)
-   
-    
-
-    
-if __name__ == '__main__':
-    app.run(debug=True)
+# Main application logic
+if st.sidebar.button("Search"):
+    display_search_form()
+else:
+    st.sidebar.button("Search")
