@@ -14,15 +14,13 @@ def display_search_results(zip_code, provider):
     st.write("Back to [Search](#search)")
 
 # Function to display the search form page
-def display_search_form():
-    st.title("Healthcare Provider Search")
-    zip_code = st.text_input("Enter ZIP code:")
-    provider = st.text_input("Enter Provider Type:")
 
-    if st.button("Search in form"):
-        display_search_results(zip_code, provider)
+st.title("Healthcare Provider Search")
+zip_code = st.text_input("Enter ZIP code:")
+provider = st.text_input("Enter Provider Type:")
 
-# Main application logic
-if st.sidebar.button("Search"):
-    display_search_form()
+if st.button("Search"):
+    display_search_results(zip_code, provider)
+
+
 
