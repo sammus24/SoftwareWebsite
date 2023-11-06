@@ -19,11 +19,10 @@ def display_search_form():
     zip_code = st.text_input("Enter ZIP code:")
     provider = st.text_input("Enter Provider Type:")
 
-    if st.button("Search"):
+    if st.button("Search in form"):
         display_search_results(zip_code, provider)
 
 # Main application logic
 if st.sidebar.button("Search"):
     display_search_form()
-else:
-    st.sidebar.button("Search")
+
