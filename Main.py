@@ -19,7 +19,7 @@ def display_search_results(zip_code, provider):
         m = folium.Map(location = [0,0],zoom_start = 1)
         locations = []
         for doctor in doctors:
-            geolocator = Nominatim(user_agent="app.py")  # Create a geolocator instance
+            geolocator = Nominatim(user_agent="Main.py")  # Create a geolocator instance
             geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 
             location = geolocator.geocode(doctor["address"])
