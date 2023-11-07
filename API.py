@@ -21,7 +21,9 @@ def search_healthcare_providers(zip_code, provider):
             
             # Get the full address
             address_data = result.get("addresses", [{}])[0]
-            address = ", ".join(filter(None, [address_data.get("address_1", ""), address_data.get("address_2", ""), address_data.get("city", ""), address_data.get("state", ""), address_data.get("postal_code", "")]))
+            code = zip_code
+    
+            address = ", ".join(filter(None, [address_data.get("address_1", ""), address_data.get("address_2", ""), address_data.get("city", ""), address_data.get("state", ""), code]))
             
             doctor_info = {
                 "first_name": first_name,
