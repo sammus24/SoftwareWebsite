@@ -47,7 +47,11 @@ def display_search_results(zip_code, provider):
 # Function to display the search form page
 st.title("Healthcare Provider Search")
 zip_code = st.text_input("Enter ZIP code:")
-provider = st.text_input("Enter Provider Type:")
+provider = st.selectbox(
+    "Select Doctor Type:",
+    ("Blank","Dentist","Optometrist","Pediatrician","Physcian",
+     "Gynecology","Internal Medicicne","Pharmacist","Radiology","Dermatology","Plastic Surgery",
+     "Psychiatrist", "Counselor","Surgery"))
 
 if st.button("Search"):
     display_search_results(zip_code, provider)
