@@ -64,3 +64,6 @@ def display_search_results(zip_code, provider, sort_option):
     else:
         left_column("No results found.")
 
+
+if __name__ == "__main__":
+    search()
