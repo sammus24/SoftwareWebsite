@@ -54,7 +54,7 @@ def display_search_results(zip_code, provider, sort_option):
                 locations.append((lat, lon))
 
             with left_column:
-                st.write("Doctor Name:", doctor["first_name"], doctor["last_name"])
+                st.write("Doctor Name:",doctor["last_name"], doctor["first_name"])
                 st.write("Address:", doctor["address"])
 
         m.fit_bounds(locations)
