@@ -5,6 +5,7 @@ from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from streamlit_folium import folium_static
 from API import search_healthcare_providers
+from application import application_function
 
 # Function to display the search results page
 def search():
@@ -41,7 +42,7 @@ def display_search_results(zip_code, provider, sort_option):
     if doctors:
         m = folium.Map(location=[0, 0], zoom_start=1)
         locations = []
-        for doctor in doctors:
+        for idx, doctor in enumerate(doctors):
             geolocator = Nominatim(user_agent="Main.py")
             geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 
@@ -55,6 +56,8 @@ def display_search_results(zip_code, provider, sort_option):
 
             with left_column:
                 st.write("Doctor Name:",doctor["last_name"], doctor["first_name"])
+                if st.button(f"Apply, {idx}"):
+                    application_function()
                 st.write("Address:", doctor["address"])
 
         m.fit_bounds(locations)
