@@ -36,36 +36,25 @@ def display_search_results(zip_code, provider, sort_option):
         m = folium.Map(location=[0, 0], zoom_start=1)
         locations = []
         for idx, doctor in enumerate(doctors):
-            geolocator = Nominatim(user_agent="Main.py")
-            geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
-
-            location = geolocator.geocode(doctor["address"])
-            if location is not None:
-                lat = location.latitude
-                lon = location.longitude
-                marker = folium.Marker([lat, lon], tooltip=doctor["address"])
-                marker.add_to(m)
-                locations.append((lat, lon))
-
             with left_column:
-                st.write("Doctor Name:",doctor["last_name"], doctor["first_name"])
-                if st.button(f"Apply, {idx}"):
-                    application_function()
-                st.write("Address:", doctor["address"])
+                geolocator = Nominatim(user_agent="Nav.py")
+                geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)  
+                location = geolocator.geocode(doctor["address"])
+                
+                if location is not None:
+                    st.write("Doctor Name:",doctor["last_name"], doctor["first_name"])
+                    st.write("Address:", doctor["address"])
+                    if st.button(f"Apply, {idx}"):
+                        application_function()
 
-                try:
-                    geolocator = Nominatim(user_agent="Nav.py")
-                    geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
-
-                    location = geolocator.geocode(doctor["address"])
-                    if location is not None:
+                    try:                 
                         lat = location.latitude
                         lon = location.longitude
                         marker = folium.Marker([lat, lon], tooltip=doctor["address"])
                         marker.add_to(m)
                         locations.append((lat, lon))
-                except Exception as e:
-                    st.warning("Error getting location")
+                    except Exception as e:
+                        st.warning("Error getting location")
 
         if st.button("Print"):
             result_string = f"Doctor Name: {doctor['last_name']}, {doctor['first_name']}\n"
