@@ -13,7 +13,7 @@ def application_function():
 
         # Text area for message
     message = st.text_area("Enter your message")
-
+     
         # Checkbox for agreeing to terms
     agree = st.checkbox("I agree to the terms and conditions")
 
@@ -25,3 +25,6 @@ def application_function():
             st.success(f"Form submitted successfully!\nName: {name}\nEmail: {email}\nMessage: {message}")
         else:
             st.warning("Please fill out all fields and agree to the terms.")
+
+if __name__ == "__main__":
+    application_function()
