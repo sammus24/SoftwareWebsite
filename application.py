@@ -25,6 +25,3 @@ def application_function():
             st.success(f"Form submitted successfully!\nName: {name}\nEmail: {email}\nMessage: {message}")
         else:
             st.warning("Please fill out all fields and agree to the terms.")
-
-if __name__ == "__main__":
-    application_function()
