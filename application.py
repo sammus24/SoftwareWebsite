@@ -18,7 +18,8 @@ def application_function():
         agree = st.checkbox("I agree to the terms and conditions")
 
         # Button to submit the form
-        if st.form_submit_button("Submit"):
+        if st.form_submit_button("Submit", on_click=application_function):
+           
             
             # Check if all fields are filled
             if name and email and message and agree:
