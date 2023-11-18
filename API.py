@@ -13,6 +13,7 @@ def search_healthcare_providers(zip_code, provider):
     if response.status_code == 200:
         data = response.json()
         results = data.get("results", [])  # Get the "results" array from the JSON data
+        NPI = data.get("Number")
 
         doctors = []
         for result in results:
@@ -28,7 +29,8 @@ def search_healthcare_providers(zip_code, provider):
             doctor_info = {
                 "first_name": first_name,
                 "last_name": last_name,
-                "address": address
+                "address": address,
+                "NPI":NPI
             }
                     
             doctors.append(doctor_info)

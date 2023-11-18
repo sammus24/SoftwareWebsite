@@ -11,6 +11,7 @@ from print import generate_pdf
 
 
 def display_search_results(zip_code, provider, sort_option):
+    
     doctors = search_healthcare_providers(zip_code, provider)
 
     # Sort the doctors based on the selected sorting option
@@ -37,7 +38,9 @@ def display_search_results(zip_code, provider, sort_option):
                     if location is not None:
                         st.write("Doctor Name:", doctor["last_name"], doctor["first_name"])
                         st.write("Address:", doctor["address"])
-                        st.button(f"Apply, {idx}", on_click=application_function)
+                        if st.button(f"Apply, {idx}",on_click=application_function):
+                            st.session_state.page ='apply'
+
 
                         lat = location.latitude
                         lon = location.longitude
@@ -61,16 +64,18 @@ def display_search_results(zip_code, provider, sort_option):
         
     if not doctors:
         st.write("No results found.")
+def Navigation():
+    
+    st.title("Healthcare Provider Search")
+    zip_code = st.text_input("Enter ZIP code:")
+    provider = st.selectbox(
+        "Select Doctor Type:",
+        ("Blank", "Dentist", "Optometrist", "Pediatrician", "Physician",
+        "Gynecology", "Internal Medicine", "Pharmacist", "Radiology", "Dermatology", "Plastic Surgery",
+        "Psychiatrist", "Counselor", "Surgery"))
+    sort_option = st.selectbox("Sort Results By:", ["Name", "Address"])
+
+    if st.button("Search"):
+        display_search_results(zip_code, provider, sort_option)
 
 
-st.title("Healthcare Provider Search")
-zip_code = st.text_input("Enter ZIP code:")
-provider = st.selectbox(
-    "Select Doctor Type:",
-    ("Blank", "Dentist", "Optometrist", "Pediatrician", "Physician",
-    "Gynecology", "Internal Medicine", "Pharmacist", "Radiology", "Dermatology", "Plastic Surgery",
-    "Psychiatrist", "Counselor", "Surgery"))
-sort_option = st.selectbox("Sort Results By:", ["Name", "Address"])
-
-if st.button("Search"):
-    display_search_results(zip_code, provider, sort_option)

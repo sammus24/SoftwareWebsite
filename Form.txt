@@ -1,0 +1,4 @@
+Name: sammu
+Email: sam.s
+Message: hi
+Agreed to terms: True
