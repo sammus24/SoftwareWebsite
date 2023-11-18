@@ -1,4 +1,4 @@
-Name: sammu
-Email: sam.s
-Message: hi
+Name: s
+Email: dd
+Message: dd
 Agreed to terms: True

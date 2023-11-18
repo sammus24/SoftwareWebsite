@@ -77,5 +77,3 @@ def Navigation():
 
     if st.button("Search"):
         display_search_results(zip_code, provider, sort_option)
-
-
