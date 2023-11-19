@@ -38,7 +38,7 @@ def display_search_results(zip_code, provider, sort_option):
                     if location is not None:
                         st.write("Doctor Name:", doctor["last_name"], doctor["first_name"])
                         st.write("Address:", doctor["address"])
-                        if st.button(f"Apply, {idx}",on_click=application_function):
+                        if st.button(f"Apply, {idx}",on_click = application_function):
                             st.session_state.page ='apply'
 
 

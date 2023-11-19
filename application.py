@@ -5,6 +5,8 @@ def application_function():
     with st.form("application"):
         st.title("Simple Form Example")
 
+        
+
         # Text input for name
         name = st.text_input("Enter your name")
 
@@ -32,5 +34,3 @@ def application_function():
             else:
                 st.warning("Please fill out all fields and agree to the terms.")
 
-if __name__ == "__main__":
-    application_function()
