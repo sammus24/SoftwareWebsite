@@ -1,8 +1,5 @@
 import streamlit as st
 
-
-
-
 def application_function(doctor):
     with st.form("application"):
         st.title("Simple Form Example")

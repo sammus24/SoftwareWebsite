@@ -3,7 +3,7 @@ import folium
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from streamlit_folium import folium_static
-from functools import partial
+
 
 from application import application_function
 
@@ -47,10 +47,7 @@ def display_search_results(zip_code, provider, sort_option):
                         st.write("Address:", doctor["address"])
                     
                         if st.button(f"Apply, {idx}",on_click = application_function,args= doctor["NPI"]):
-                            st.session_state.apply = True
-        
-                
-                            
+                            st.session_state.apply = True                         
                         lat = location.latitude
                         lon = location.longitude
                         marker = folium.Marker([lat, lon], tooltip=doctor["address"])
@@ -88,3 +85,4 @@ def Navigation():
 
     if st.button("Search"):
         display_search_results(zip_code, provider, sort_option)
+
