@@ -15,4 +15,3 @@ if 'page' not in st.session_state:
 if st.session_state.page == 'navigation':
     Navigation()
     st.write(st.session_state)
-'j9i'
