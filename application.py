@@ -1,11 +1,12 @@
 import streamlit as st
 
 
-def application_function():
+
+
+def application_function(doctor):
     with st.form("application"):
         st.title("Simple Form Example")
-
-        
+        st.write(doctor)
 
         # Text input for name
         name = st.text_input("Enter your name")
@@ -20,7 +21,7 @@ def application_function():
         agree = st.checkbox("I agree to the terms and conditions")
 
         # Button to submit the form
-        if st.form_submit_button("Submit", on_click=application_function):
+        if st.form_submit_button("Submit",on_click = Navigation):
            
             
             # Check if all fields are filled

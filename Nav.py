@@ -3,6 +3,8 @@ import folium
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from streamlit_folium import folium_static
+from functools import partial
+
 from application import application_function
 
 from API import search_healthcare_providers
@@ -11,7 +13,11 @@ from print import generate_pdf
 
 
 def display_search_results(zip_code, provider, sort_option):
+    # Initialize the session state
+    if 'apply' not in st.session_state:
+        st.session_state.apply = False
     
+
     doctors = search_healthcare_providers(zip_code, provider)
 
     # Sort the doctors based on the selected sorting option
@@ -35,13 +41,16 @@ def display_search_results(zip_code, provider, sort_option):
                     geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)  
                     location = geolocator.geocode(doctor["address"])
 
+
                     if location is not None:
                         st.write("Doctor Name:", doctor["last_name"], doctor["first_name"])
                         st.write("Address:", doctor["address"])
-                        if st.button(f"Apply, {idx}",on_click = application_function):
-                            st.session_state.page ='apply'
-
-
+                    
+                        if st.button(f"Apply, {idx}",on_click = application_function,args= doctor["NPI"]):
+                            st.session_state.apply = True
+        
+                
+                            
                         lat = location.latitude
                         lon = location.longitude
                         marker = folium.Marker([lat, lon], tooltip=doctor["address"])
@@ -64,8 +73,10 @@ def display_search_results(zip_code, provider, sort_option):
         
     if not doctors:
         st.write("No results found.")
+
+
 def Navigation():
-    
+      
     st.title("Healthcare Provider Search")
     zip_code = st.text_input("Enter ZIP code:")
     provider = st.selectbox(
