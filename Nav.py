@@ -13,10 +13,7 @@ from print import generate_pdf
 
 
 def display_search_results(zip_code, provider, sort_option):
-    # Initialize the session state
-    if 'apply' not in st.session_state:
-        st.session_state.apply = False
-    
+       
 
     doctors = search_healthcare_providers(zip_code, provider)
 
@@ -46,8 +43,9 @@ def display_search_results(zip_code, provider, sort_option):
                         st.write("Doctor Name:", doctor["last_name"], doctor["first_name"])
                         st.write("Address:", doctor["address"])
                     
-                        if st.button(f"Apply, {idx}",on_click = application_function,args= doctor["NPI"]):
-                            st.session_state.apply = True                         
+                        st.button(f"Apply, {idx}",on_click= application_function)
+                     
+
                         lat = location.latitude
                         lon = location.longitude
                         marker = folium.Marker([lat, lon], tooltip=doctor["address"])
