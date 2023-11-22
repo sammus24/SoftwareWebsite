@@ -44,6 +44,8 @@ def display_search_results(zip_code, provider, sort_option):
                         st.write("Address:", doctor["address"])
                     
                         st.button(f"Apply, {idx}",on_click= application_function)
+                         
+
                      
 
                         lat = location.latitude

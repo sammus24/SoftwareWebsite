@@ -39,6 +39,7 @@ def application_function():
 
         # Button to submit the form
         if st.form_submit_button("Submit", on_click = application_function):
+
             # Check if all fields are filled
             if full_name and email and phone_number and address and ssn_last_4 and message and agree:
                 # Process the form data (you can add your own processing logic here)
@@ -47,6 +48,7 @@ def application_function():
                 # Write form data to a file
                 with open('Form.txt', 'w') as file:
                     file.write(f"Doctor's NPI: {doctor_npi}\nFull Name: {full_name}\nEmail: {email}\nPhone Number: {phone_number}\nAddress: {address}\nLast 4 digits of SSN: {ssn_last_4}\nMessage: {message}\nAgreed to terms: {agree}")
+                st.experimental_rerun()
             else:
                 st.warning("Please fill out all fields and agree to the terms.")
 
