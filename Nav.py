@@ -72,6 +72,13 @@ def display_search_results(zip_code, provider, sort_option):
         st.write("No results found.")
 
 
+def results_page(zip_code, provider, sort_option):
+    st.session_state.page = "results"
+    st.session_state.rerun_flag = True
+
+    display_search_results(zip_code, provider, sort_option)
+
+
 def Navigation():
       
     st.title("Healthcare Provider Search")
@@ -82,7 +89,8 @@ def Navigation():
         "Gynecology", "Internal Medicine", "Pharmacist", "Radiology", "Dermatology", "Plastic Surgery",
         "Psychiatrist", "Counselor", "Surgery"))
     sort_option = st.selectbox("Sort Results By:", ["Name", "Address"])
+    # clear the search box
 
     if st.button("Search"):
-        display_search_results(zip_code, provider, sort_option)
+        results_page(zip_code, provider, sort_option)
 
