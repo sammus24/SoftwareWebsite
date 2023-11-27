@@ -1,49 +1,51 @@
 import requests
-import json
+from pyzipcode import ZipCodeDatabase
 
 
-def search_healthcare_providers(zip_code, provider):
-    parameters = {
-        "postal_code": zip_code,
-        "taxonomy_description": provider
-    }
 
-    response = requests.get("https://npiregistry.cms.hhs.gov/api/?pretty=on&enumeration_type=NPI-1&version=2.1", params=parameters)
+def search_healthcare_providers(zip_code, provider, radius):
+    zip_codes = Zip_codes(zip_code, radius)
+    final = []
 
-    if response.status_code == 200:
-        data = response.json()
-        results = data.get("results", [])  # Get the "results" array from the JSON data
+    for code in zip_codes:
+        parameters = {
+            "postal_code": code,
+            "taxonomy_description": provider
+        }
 
-        doctors = []
-        for result in results:
-            first_name = result.get("basic", {}).get("first_name", "")  # Get doctor's first name
-            last_name = result.get("basic", {}).get("last_name", "")  # Get doctor's last name
+        response = requests.get("https://npiregistry.cms.hhs.gov/api/?pretty=on&enumeration_type=NPI-1&version=2.1", params=parameters)
 
-            # Look for NPI number in different possible locations within the response
-            NPI_number = None
-            if "number" in result:
-                NPI_number = result["number"]
-            elif "enumeration_type" in result and result["enumeration_type"] == "NPI-2":
+        if response.status_code == 200:
+            data = response.json()
+            results = data.get("results", [])
+            
+            
+
+            for result in results:
+                first_name = result.get("basic", {}).get("first_name", "")
+                last_name = result.get("basic", {}).get("last_name", "")
                 NPI_number = result.get("number", "")
 
-            
-            
-            # Get the full address
-            address_data = result.get("addresses", [{}])[0]
-            code = zip_code
-    
-            address = ", ".join(filter(None, [address_data.get("address_1", ""), address_data.get("address_2", ""), address_data.get("city", ""), address_data.get("state", ""), code]))
-            
-            doctor_info = {
-                "first_name": first_name,
-                "last_name": last_name,
-                "address": address,
-                "NPI":NPI_number
-            }
-                    
-            doctors.append(doctor_info)
-        return doctors
-    else:
-        return None
-    
-    
+                address_data = result.get("addresses", [{}])[0]
+                address = ", ".join(filter(None, [address_data.get("address_1", ""), address_data.get("address_2", ""), address_data.get("city", ""), address_data.get("state", ""),code]))
+
+                doctor_info = {
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "address": address,
+                    "NPI": NPI_number
+                }
+                
+               
+                final.append(doctor_info)
+        else:
+            # Handle potential errors
+            print(f"Failed to fetch data for {code}. Status code: {response.status_code}")
+
+    return final
+
+def Zip_codes(zip, radius): 
+    zcdb = ZipCodeDatabase()
+    in_radius = [z.zip for z in zcdb.get_zipcodes_around_radius(zip, radius)]
+    return in_radius
+
