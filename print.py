@@ -13,7 +13,7 @@ def generate_pdf(doctors):
     # Write data to PDF
     for doctor in doctors:
         pdf.ln(10)  # Move to the next line for spacing
-        pdf.cell(200, 10, txt=f"Name: {doctor['last_name']}, {doctor['first_name']}", ln=True)
+        pdf.cell(200, 10, txt=f"Name: {doctor['organization']}", ln=True)
         pdf.cell(200, 10, txt=f"Address: {doctor['address']}", ln=True)
         
     

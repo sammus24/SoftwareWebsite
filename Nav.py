@@ -7,8 +7,6 @@ from application import application_function
 from API import search_healthcare_providers
 from print import generate_pdf
 
-
-st.write(st.session_state)   
 def display_search_results(zip_code, provider, sort_option, radius):
 
    
@@ -16,7 +14,9 @@ def display_search_results(zip_code, provider, sort_option, radius):
 
     # Sort the doctors based on the selected sorting option
     if sort_option == "Name":
-        doctors.sort(key=lambda doctor: (doctor["last_name"], doctor["first_name"]))
+        doctors.sort(key=lambda doctor: (doctor["organization"]))
+    elif sort_option == "Name":
+        doctors.sort(key=lambda doctor: (doctor["organization"]),reverse= True)
     elif sort_option == "Address":
         doctors.sort(key=lambda doctor: doctor["address"])
 
@@ -34,10 +34,12 @@ def display_search_results(zip_code, provider, sort_option, radius):
                 try:
                     location = geolocator.geocode(doctor["address"])
                     if location is not None:
-                                              
-                        st.write("Doctor Name:", doctor["last_name"], doctor["first_name"])
+                        st.write("Organization Name: ",doctor['organization'])                     
+                        #st.write("Doctor Name:", doctor["last_name"], doctor["first_name"])
+                        number = doctor['NPI']
                         st.write("Address:", doctor["address"])
-                        st.button(f"Apply, {idx}",on_click= application_function)                          
+                        
+                        st.button(f"Apply Here",key = number,on_click= application_function)                          
                         lat = location.latitude
                         lon = location.longitude
                         marker = folium.Marker([lat, lon], tooltip=doctor["address"])
@@ -52,11 +54,12 @@ def display_search_results(zip_code, provider, sort_option, radius):
 
             pdf = generate_pdf(doctors)
 
-            st.download_button(
+            if st.download_button(
                 label='Download Results',
                 data=pdf,
                 file_name='Doctor_results.pdf'
-             )
+             ):
+                st.session_state.page = 'results'
 
     if not doctors:
         st.write("No results found.")
@@ -69,7 +72,9 @@ def results_page(zip_code, provider, sort_option, radius):
 
 def Navigation():
     st.title("Healthcare Provider Search")
+
     zip_code = st.text_input("Enter ZIP code:")
+
     radius = st.text_input("Enter Radius (Default Radius = 5): ")
     if not radius:
         radius = 5  # Set default radius to 5 if not provided
@@ -84,8 +89,12 @@ def Navigation():
     # clear the search box
 
     if st.button("Search"):
-        results_page(zip_code, provider, sort_option, radius)
-        
-        
-
-        
+         # Check if the entered ZIP code is valid
+        if is_valid_zip(zip_code):
+            results_page(zip_code, provider, sort_option, radius)
+        else:
+            st.warning('Please Enter a Valid 5-digit ZIP Code')
+       
+def is_valid_zip(zip_code):
+    # Check if the ZIP code meets the required conditions for validity (you may need a more robust check)
+    return len(zip_code) == 5 and zip_code.isdigit()
