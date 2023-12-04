@@ -6,15 +6,35 @@ from application import application_function
 from API import search_healthcare_providers,specific_provider
 from print import generate_pdf
 
-def provider_page(provider ,code):
-    st.title("Provider Page")
-    infos = specific_provider(provider, code)
-    if infos:
-        st.write('Name: ',infos["name"])
-    
-def display_search_results(zip_code, provider, sort_option, radius):
 
+def provider_page(provider ,code):
+    
+    left_column, right_column = st.columns(2)
+    with left_column:
+        st.title("Results")
+        info = specific_provider(provider, code)
+        if info:
+            for i in info:
+                st.write(i['org_name'])
+                st.write(i['telephone_number'])
+                st.write(i['taxonomy_description']) 
+                st.button(f"Apply Here",on_click= app_page)
+                
+            with right_column:
+                map = location(info)
+                if map:
+                    st.write("Map exists.")
+                    #folium_static(map)
+                else:
+                    st.write("No vaild location found.")
+        else:
+            st.write("There no provider by that name")
+            
+        
+        
    
+def display_search_results(zip_code, provider, sort_option, radius):
+      
     doctors = search_healthcare_providers(zip_code, provider, radius)
     doc = are_within_radius(zip_code,doctors,radius)
 
@@ -38,29 +58,19 @@ def display_search_results(zip_code, provider, sort_option, radius):
         key = st.session_state.get("key", 1)
         with left_column:
             for i in doc[:count]:
-                st.write("Organization Name:", i['organization'])
-                st.write("Address: ", i['address'])
-                st.write("Phone Number: ",i['phone'])
-                number = i['NPI']
-                st.button(f"Apply Here",key = number,on_click= app_page)
-                  
+                display_doctor_info(i)
+                                 
                     
             if (len(doc)> count):
                 load = st.button("Load more", key = key)
                 if load:
                     st.session_state.count += 5
                     st.session_state.key += 1
-                    st.session_state.page = 'load'
-                    for i in doc[count:count+5]:
-                        st.write("Organization Name:", i['organization'])
-                        st.write("Address: ", i['address'])
-                        st.write("Phone Number: ",i['phone'])
-                        number = i['NPI']
-                        st.button(f"Apply Here",key = number,on_click= app_page)
-                            
-    
-                
-            
+                    additional_results = doc[count : count + 5]
+
+                    for i in additional_results:
+                        display_doctor_info(i)
+                        
                            
             with right_column:
                 #map = location(doc)
@@ -81,6 +91,14 @@ def display_search_results(zip_code, provider, sort_option, radius):
 
     else:
         st.write("No results found.")
+
+def display_doctor_info(doctor_info):
+    st.write("Organization Name:", doctor_info['organization'])
+    st.write("Address: ", doctor_info['address'])
+    st.write("Phone Number: ", doctor_info['phone'])
+    number = doctor_info['NPI']
+    st.button(f"Apply Here",key = number,on_click= app_page)
+    
 
 def app_page():
     st.session_state.page = "apply"
@@ -105,7 +123,7 @@ def Navigation():
         provider = st.selectbox(
             "Select Provider Type:",
             ("Blank", "Dentist", "Optometrist", "Pediatrician", "Physician",
-            "Gynecology", "Internal Medicine", "Pharmacist", "Radiology", "Dermatology", "Plastic Surgery",
+            "Gynecology", "Internal Medicine", "Pharmacist","Physical Therapist", "Radiology", "Dermatology", "Plastic Surgery",
             "Psychiatrist", "Counselor", "Surgery"))
         sort_option = st.selectbox("Sort Results By:", ["Name A-Z",'Name Z-A', "Address"])
         # clear the search box
@@ -123,7 +141,7 @@ def Navigation():
         
         if st.button ("Search", key = 'spcific'):
             if is_valid_zip(code):
-                provider_page(code, provider)
+                provider_page(provider, code)
             else:
                 st.warning('Please Enter a Valid 5-digit ZIP Code')
             

@@ -28,9 +28,10 @@ def specific_provider(provider, code):
                     taxonomy_desc = taxonomies[0].get("desc")
                     
 
-                addresses = result.get("addresses", [])
+                addresses = result.get("addresses", [{}])[0]
                 if addresses:
-                    telephone_number = addresses[0].get("telephone_number")  # Assuming first address
+                    telephone_number = addresses.get("telephone_number")  # Assuming first address
+                    address = ", ".join(filter(None, [addresses.get("address_1", ""), addresses.get("address_2", ""), addresses.get("city", ""), addresses.get("state", ""),code]))
                     
 
                 basic_info = result.get("basic", {})                
@@ -40,21 +41,20 @@ def specific_provider(provider, code):
                 if organization_name and organization_name.lower() == provider.lower():
                     name = basic_info.get("organization_name")
                     information = {
-                        "name": name,
+                        "org_name": name,
                         "taxonomy_description": taxonomy_desc,
-                        "telephone_number": telephone_number
+                        "telephone_number": telephone_number,
+                        "address":address
                     }
                     info.append(information)
+                    return info
                 else:
-                    return "Provider not found"
+                    return []
             else:
-                return "No results found"
-        else:
-            return f"Request failed with status code: {response.status_code}"
+                return [] 
     except requests.RequestException as e:
-        return f"Request error: {str(e)}"
-    
-    return info
+        return []
+   
     
     
 def search_healthcare_providers(zip_code, provider, radius):
@@ -109,5 +109,4 @@ def Zip_codes(zip, radius):
     zcdb = ZipCodeDatabase()
     in_radius = [z.zip for z in zcdb.get_zipcodes_around_radius(zip, radius)]
     return in_radius
-
 
