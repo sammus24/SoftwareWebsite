@@ -27,6 +27,7 @@ def provider_page(provider ,code):
                     #folium_static(map)
                 else:
                     st.write("No vaild location found.")
+                    print('hi')
         else:
             st.write("There no provider by that name")
             
