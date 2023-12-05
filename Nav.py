@@ -20,14 +20,14 @@ def provider_page(provider ,code):
                 st.write(i['taxonomy_description']) 
                 st.button(f"Apply Here",on_click= app_page)
                 
-            with right_column:
-                map = location(info)
-                if map:
-                    st.write("Map exists.")
+            #with right_column:
+                #map = location(info)
+                #if map:
+                    #st.write("Map exists.")
                     #folium_static(map)
-                else:
-                    st.write("No vaild location found.")
-                    print('hi')
+                #else:
+                    #st.write("No vaild location found.")
+                    
         else:
             st.write("There no provider by that name")
             
@@ -35,6 +35,11 @@ def provider_page(provider ,code):
         
    
 def display_search_results(zip_code, provider, sort_option, radius):
+    if 'count' not in st.session_state:
+        st.session_state.count = 5
+
+    if 'key' not in st.session_state:
+        st.session_state.key = 1
       
     doctors = search_healthcare_providers(zip_code, provider, radius)
     doc = are_within_radius(zip_code,doctors,radius)
@@ -63,12 +68,13 @@ def display_search_results(zip_code, provider, sort_option, radius):
                                  
                     
             if (len(doc)> count):
-                load = st.button("Load more", key = key)
+        
+                load = st.button("Load more", key =st.session_state.key )
                 if load:
                     st.session_state.count += 5
                     st.session_state.key += 1
-                    additional_results = doc[count : count + 5]
-
+                    additional_results = doc[st.session_state.count - 5 : st.session_state.count]
+                    
                     for i in additional_results:
                         display_doctor_info(i)
                         
@@ -131,10 +137,13 @@ def Navigation():
 
         if st.button("Search",key = 'multiple'):
             # Check if the entered ZIP code is valid
-            if is_valid_zip(zip_code):
-                display_search_results(zip_code, provider, sort_option, radius)
+            if provider == 'Blank':
+                st.write("Please select a provider")
             else:
-                st.warning('Please Enter a Valid 5-digit ZIP Code')
+                if is_valid_zip(zip_code):
+                    display_search_results(zip_code, provider, sort_option, radius)
+                else:
+                    st.warning('Please Enter a Valid 5-digit ZIP Code') 
     with tab2:
         st.title("Find out if your Doctor is a Health Credit provider")
         code = st.text_input("ZIP code:")
