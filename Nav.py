@@ -9,6 +9,7 @@ from print import generate_pdf
 
 def provider_page(provider ,code):
     
+    
     left_column, right_column = st.columns(2)
     with left_column:
         st.title("Results")
@@ -20,14 +21,14 @@ def provider_page(provider ,code):
                 st.write(i['taxonomy_description']) 
                 st.button(f"Apply Here",on_click= app_page)
                 
-            with right_column:
-                map = location(info)
-                if map:
-                    st.write("Map exists.")
+            #with right_column:
+                #map = location(info)
+                #if map:
+                    #st.write("Map exists.")
                     #folium_static(map)
-                else:
-                    st.write("No vaild location found.")
-                    print('hi')
+                #else:
+                    #st.write("No vaild location found.")
+                    
         else:
             st.write("There no provider by that name")
             
@@ -35,6 +36,7 @@ def provider_page(provider ,code):
         
    
 def display_search_results(zip_code, provider, sort_option, radius):
+   
       
     doctors = search_healthcare_providers(zip_code, provider, radius)
     doc = are_within_radius(zip_code,doctors,radius)
@@ -63,7 +65,7 @@ def display_search_results(zip_code, provider, sort_option, radius):
                                  
                     
             if (len(doc)> count):
-                load = st.button("Load More", key=key)
+                load = st.button("Load more", key = key)
                 if load:
                     st.session_state.count += 5
                     st.session_state.key += 1
@@ -82,12 +84,15 @@ def display_search_results(zip_code, provider, sort_option, radius):
                     #st.write("No vaild location found.")
                 
                 pdf = generate_pdf(doctors)
-            
-                st.download_button(
-                    label='Download Results',
-                    data=pdf,
-                    file_name='Doctor_results.pdf'
-                )
+                
+                if st.session_state.rerun_flag:
+                     if st.download_button(
+                        label='Download Results',
+                        data=pdf,
+                        file_name='Doctor_results.pdf'
+                        ):
+                            st.session_state.rerun_flag = False
+
                 
 
     else:
@@ -131,10 +136,13 @@ def Navigation():
 
         if st.button("Search",key = 'multiple'):
             # Check if the entered ZIP code is valid
-            if is_valid_zip(zip_code):
-                display_search_results(zip_code, provider, sort_option, radius)
+            if provider == 'Blank':
+                st.write("Please select a provider")
             else:
-                st.warning('Please Enter a Valid 5-digit ZIP Code')
+                if is_valid_zip(zip_code):
+                    display_search_results(zip_code, provider, sort_option, radius)
+                else:
+                    st.warning('Please Enter a Valid 5-digit ZIP Code') 
     with tab2:
         st.title("Find out if your Doctor is a Health Credit provider")
         code = st.text_input("ZIP code:")
