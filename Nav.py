@@ -1,99 +1,151 @@
 import streamlit as st
-import folium
-from geopy.geocoders import Nominatim
-from geopy.extra.rate_limiter import RateLimiter
 from streamlit_folium import folium_static
+
+from map import location,are_within_radius
 from application import application_function
-from API import search_healthcare_providers
+from API import search_healthcare_providers,specific_provider
 from print import generate_pdf
 
-def display_search_results(zip_code, provider, sort_option, radius):
 
+def provider_page(provider ,code):
+    
+    left_column, right_column = st.columns(2)
+    with left_column:
+        st.title("Results")
+        info = specific_provider(provider, code)
+        if info:
+            for i in info:
+                st.write(i['org_name'])
+                st.write(i['telephone_number'])
+                st.write(i['taxonomy_description']) 
+                st.button(f"Apply Here",on_click= app_page)
+                
+            with right_column:
+                map = location(info)
+                if map:
+                    st.write("Map exists.")
+                    #folium_static(map)
+                else:
+                    st.write("No vaild location found.")
+                    print('hi')
+        else:
+            st.write("There no provider by that name")
+            
+        
+        
    
+def display_search_results(zip_code, provider, sort_option, radius):
+      
     doctors = search_healthcare_providers(zip_code, provider, radius)
+    doc = are_within_radius(zip_code,doctors,radius)
 
     # Sort the doctors based on the selected sorting option
-    if sort_option == "Name":
-        doctors.sort(key=lambda doctor: (doctor["organization"]))
-    elif sort_option == "Name":
-        doctors.sort(key=lambda doctor: (doctor["organization"]),reverse= True)
+    if sort_option == "Name  A-Z":
+        doc.sort(key=lambda doctor: (doctor["organization"]))
+    elif sort_option == "Name Z-A":
+        doc.sort(key=lambda doctor: (doctor["organization"]),reverse= True)
     elif sort_option == "Address":
-        doctors.sort(key=lambda doctor: doctor["address"])
+        doc.sort(key=lambda doctor: doctor["address"])
 
     st.title("Search Results")
 
     # Create a two-column layout
     left_column, right_column = st.columns(2)
+    
+    
 
-    if doctors:
-        geolocator = Nominatim(user_agent="Nav.py")
-        m = folium.Map(location=[0, 0], zoom_start=1)
-        locations = []
-        for idx, doctor in enumerate(doctors):
-            with left_column:
-                try:
-                    location = geolocator.geocode(doctor["address"])
-                    if location is not None:
-                        st.write("Organization Name: ",doctor['organization'])                     
-                        #st.write("Doctor Name:", doctor["last_name"], doctor["first_name"])
-                        number = doctor['NPI']
-                        st.write("Address:", doctor["address"])
+    if doc:
+        count = st.session_state.get("count", 5)
+        key = st.session_state.get("key", 1)
+        with left_column:
+            for i in doc[:count]:
+                display_doctor_info(i)
+                                 
+                    
+            if (len(doc)> count):
+                load = st.button("Load More", key=key)
+                if load:
+                    st.session_state.count += 5
+                    st.session_state.key += 1
+                    additional_results = doc[count : count + 5]
+
+                    for i in additional_results:
+                        display_doctor_info(i)
                         
-                        st.button(f"Apply Here",key = number,on_click= application_function)                          
-                        lat = location.latitude
-                        lon = location.longitude
-                        marker = folium.Marker([lat, lon], tooltip=doctor["address"])
-                        marker.add_to(m)
-                        locations.append((lat, lon))
-                except Exception as e:
-                    st.warning("Error getting location")
-        with right_column:
-            if locations:
-                m.fit_bounds(locations)
-                folium_static(m, width=700)
+                           
+            with right_column:
+                #map = location(doc)
+                #if map:
+                    #st.write("Map exists.")
+                    #folium_static(map)
+                #else:
+                    #st.write("No vaild location found.")
+                
+                pdf = generate_pdf(doctors)
+            
+                st.download_button(
+                    label='Download Results',
+                    data=pdf,
+                    file_name='Doctor_results.pdf'
+                )
+                
 
-            pdf = generate_pdf(doctors)
-
-            if st.download_button(
-                label='Download Results',
-                data=pdf,
-                file_name='Doctor_results.pdf'
-             ):
-                st.session_state.page = 'results'
-
-    if not doctors:
+    else:
         st.write("No results found.")
 
-def results_page(zip_code, provider, sort_option, radius):
-    st.session_state.page = "results"
+def display_doctor_info(doctor_info):
+    st.write("Organization Name:", doctor_info['organization'])
+    st.write("Address: ", doctor_info['address'])
+    st.write("Phone Number: ", doctor_info['phone'])
+    number = doctor_info['NPI']
+    st.button(f"Apply Here",key = number,on_click= app_page)
+    
+
+def app_page():
+    st.session_state.page = "apply"
     st.session_state.rerun_flag = True
+    
+    application_function()
 
-    display_search_results(zip_code, provider, sort_option, radius)
-
+    
 def Navigation():
-    st.title("Healthcare Provider Search")
+    
+    tab1, tab2 =st.tabs(['Provider search', 'Health Credit provider'])
+    
+    with tab1:
+        st.title("Health Care Provider search")
+        zip_code = st.text_input("Enter ZIP code:")
 
-    zip_code = st.text_input("Enter ZIP code:")
-
-    radius = st.text_input("Enter Radius (Default Radius = 5): ")
-    if not radius:
-        radius = 5  # Set default radius to 5 if not provided
-    else:
-        radius = int(radius)
-    provider = st.selectbox(
-        "Select Doctor Type:",
-        ("Blank", "Dentist", "Optometrist", "Pediatrician", "Physician",
-        "Gynecology", "Internal Medicine", "Pharmacist", "Radiology", "Dermatology", "Plastic Surgery",
-        "Psychiatrist", "Counselor", "Surgery"))
-    sort_option = st.selectbox("Sort Results By:", ["Name", "Address"])
-    # clear the search box
-
-    if st.button("Search"):
-         # Check if the entered ZIP code is valid
-        if is_valid_zip(zip_code):
-            results_page(zip_code, provider, sort_option, radius)
+        radius = st.text_input("Enter Radius (Default Radius = 5 miles): ")
+        if not radius:
+            radius = 5  # Set default radius to 5 if not provided
         else:
-            st.warning('Please Enter a Valid 5-digit ZIP Code')
+            radius = int(radius)
+        provider = st.selectbox(
+            "Select Provider Type:",
+            ("Blank", "Dentist", "Optometrist", "Pediatrician", "Physician",
+            "Gynecology", "Internal Medicine", "Pharmacist","Physical Therapist", "Radiology", "Dermatology", "Plastic Surgery",
+            "Psychiatrist", "Counselor", "Surgery"))
+        sort_option = st.selectbox("Sort Results By:", ["Name A-Z",'Name Z-A', "Address"])
+        # clear the search box
+
+        if st.button("Search",key = 'multiple'):
+            # Check if the entered ZIP code is valid
+            if is_valid_zip(zip_code):
+                display_search_results(zip_code, provider, sort_option, radius)
+            else:
+                st.warning('Please Enter a Valid 5-digit ZIP Code')
+    with tab2:
+        st.title("Find out if your Doctor is a Health Credit provider")
+        code = st.text_input("ZIP code:")
+        provider = st.text_input("Enter Provider Name: ")
+        
+        if st.button ("Search", key = 'spcific'):
+            if is_valid_zip(code):
+                provider_page(provider, code)
+            else:
+                st.warning('Please Enter a Valid 5-digit ZIP Code')
+            
        
 def is_valid_zip(zip_code):
     # Check if the ZIP code meets the required conditions for validity (you may need a more robust check)

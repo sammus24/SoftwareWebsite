@@ -27,9 +27,6 @@ def application_function():
 
         # Text input for address
         address = st.text_input("Enter the address")
-
-        # Text input for last 4 digits of SSN
-        ssn_last_4 = st.text_input("Enter the last 4 digits of SSN", type="password")
         
         # Text area for message
         message = st.text_area("Enter the reason for an Appointment")
@@ -40,13 +37,13 @@ def application_function():
         # Button to submit the form
         if st.form_submit_button("Submit", on_click= application_function):
            
-            if full_name and email and phone_number and address and ssn_last_4 and message and agree:
+            if full_name and email and phone_number and address and message and agree:
                 # Process the form data (you can add your own processing logic here)
                 st.success(f"Form submitted successfully!")
 
                 # Write form data to a file
                 with open('Form.txt', 'w') as file:
-                    file.write(f"Doctor's NPI: {doctor_npi}\nFull Name: {full_name}\nEmail: {email}\nPhone Number: {phone_number}\nAddress: {address}\nLast 4 digits of SSN: {ssn_last_4}\nMessage: {message}\nAgreed to terms: {agree}")
+                    file.write(f"Doctor's NPI: {doctor_npi}\nFull Name: {full_name}\nEmail: {email}\nPhone Number: {phone_number}\nAddress: {address}\nMessage: {message}\nAgreed to terms: {agree}")
                    
                 st.session_state.page = 'navigation' 
                 st.rerun()  # Rerun the app to show the search page 
