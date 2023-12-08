@@ -9,6 +9,7 @@ from print import generate_pdf
 
 def provider_page(provider ,code):
     
+    
     left_column, right_column = st.columns(2)
     with left_column:
         st.title("Results")
@@ -35,11 +36,7 @@ def provider_page(provider ,code):
         
    
 def display_search_results(zip_code, provider, sort_option, radius):
-    if 'count' not in st.session_state:
-        st.session_state.count = 5
-
-    if 'key' not in st.session_state:
-        st.session_state.key = 1
+   
       
     doctors = search_healthcare_providers(zip_code, provider, radius)
     doc = are_within_radius(zip_code,doctors,radius)
@@ -69,14 +66,7 @@ def display_search_results(zip_code, provider, sort_option, radius):
                     
             if (len(doc)> count):
         
-                load = st.button("Load more", key =st.session_state.key )
-                if load:
-                    st.session_state.count += 5
-                    st.session_state.key += 1
-                    additional_results = doc[st.session_state.count - 5 : st.session_state.count]
-                    
-                    for i in additional_results:
-                        display_doctor_info(i)
+                st.button('load more')
                         
                            
             with right_column:
@@ -88,12 +78,15 @@ def display_search_results(zip_code, provider, sort_option, radius):
                     #st.write("No vaild location found.")
                 
                 pdf = generate_pdf(doctors)
-            
-                st.download_button(
-                    label='Download Results',
-                    data=pdf,
-                    file_name='Doctor_results.pdf'
-                )
+                
+                if st.session_state.rerun_flag:
+                     if st.download_button(
+                        label='Download Results',
+                        data=pdf,
+                        file_name='Doctor_results.pdf'
+                        ):
+                            st.session_state.rerun_flag = False
+
                 
 
     else:

@@ -6,6 +6,8 @@ backgroundColor="#FFFFFF"
 secondaryBackgroundColor="#F0F2F6"
 textColor="#262730"
 font="sans serif"
+
+
 def main_page():
     
     st.title("Main Page")
@@ -33,7 +35,7 @@ def main():
         # Render Navigation function here
         clear_page()
         Navigation()
-        
+      
     
  
 # Call the main function to start the app
