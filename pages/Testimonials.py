@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.markdown("<h1 style='text-align: center; color: Black;text-decoration:underline'>Testimonials</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: Black;text-decoration:underline font-face: KODCHASAN;'>Testimonials</h1>", unsafe_allow_html=True)
 
 st.write("")
 st.write("")
@@ -17,7 +17,7 @@ col1, col2 ,col3,col4= st.columns(4)
 with col1:
     st.image('Photos/T1.png')
     st.image('Photos/stars.png')
-    st.markdown("<div style='text-align:Center;font-size: 20px; font-weight: bold; font-face:kadwa ;'>'Easy to find a provider!'</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:Center;font-size: 20px; font-weight: bold; font-face:KADWA ;'>'Easy to find a provider!'</div>", unsafe_allow_html=True)
     
     
 
