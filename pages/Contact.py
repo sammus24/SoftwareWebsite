@@ -23,9 +23,8 @@ with top_col1:
 
 with col4:
     st.image('Photos/phone.png', use_column_width=True)
-    st.markdown("<divfont-size: 35px; font-weight: bold;'>1-800-HIVE</div>", unsafe_allow_html=True)
-
-    
+    st.header("1-800-HIVE")
+    st.markdown("<div style='text-align: left;font-size: 35px; font-weight: bold;'>HHProviders@yahoo.com</div>", unsafe_allow_html=True)
 
 
 st.write("")  # Adding space between top images and email symbol
@@ -37,7 +36,7 @@ with center_col[0]:
 
 with center_col[2]:
     st.image('Photos/@symbol.png', use_column_width=True)
-    st.markdown("<divfont-size: 35px; font-weight: bold;'>HHProviders@yahoo.com</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: left;font-size: 35px; font-weight: bold;'>HHProviders@yahoo.com</div>", unsafe_allow_html=True)
 
 with center_col[3]:
     pass  # Another empty column for centering
