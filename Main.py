@@ -1,14 +1,10 @@
 import streamlit as st
 from Nav import Navigation
 
-primaryColor="#F63366"
-backgroundColor="#FFFFFF"
-secondaryBackgroundColor="#F0F2F6"
-textColor="#262730"
-font="sans serif"
 def main_page():
-    
-    st.title("Main Page")
+    st.markdown("<h1 style='text-align: Center; color: #FFD361;font-face: kodchasan;'>Hive Health</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: Center; color:black ;font-face: kodchasan;'>Providers</h1>", unsafe_allow_html=True)
+    st.image('Photos/Mainpage.jpg')
     if st.button('Navigate'):
         st.session_state.page = 'navigation'
         st.session_state.rerun_flag = True  # Set a flag to indicate rerun
@@ -33,6 +29,8 @@ def main():
         # Render Navigation function here
         clear_page()
         Navigation()
+      
+    
  
 # Call the main function to start the app
 if __name__ == '__main__':
