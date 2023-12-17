@@ -1,36 +1,6 @@
 import streamlit as st
 import folium
-from geopy.distance import geodesic
 from geopy.geocoders import Bing
-
-def are_within_radius(zipcode, doctors, radius_mi):
-    # Geolocate the provided ZIP code
-    geolocator = Bing(api_key="AiD2FXje7LL88RhGVmH1mhdAr1-LQC2aApNC1oPG3Psnj_4NStiayQh_Vuct1moh")
-
-    location_zip = geolocator.geocode(zipcode)
-    
-    if location_zip is None:
-        return False
-    
-    zip_coords = (location_zip.latitude, location_zip.longitude)
-    list = []
-    # Geolocate addresses and check distances
-    for address in doctors:
-        
-        try:
-            add = address.get('address')
-            location = geolocator.geocode(add)
-            if location is not None:
-                address_coords = (location.latitude, location.longitude)
-                distance = geodesic(zip_coords, address_coords).miles
-                if distance <= radius_mi:
-                    list.append(address)  # Found an address outside the radius
-            
-        except Exception as e:
-            print(f"Error getting location for {address}: {e}")
-              # Error occurred during geocoding
-    
-    return list  # All addresses are within the radius from the ZIP code
 
 def location(doctor):
     # Geolocation of the doctor's address using Bing Maps API

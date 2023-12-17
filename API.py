@@ -5,6 +5,10 @@ from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 import asyncio
 import httpx
+from geopy.distance import geodesic
+from geopy.geocoders import Bing
+
+import time
 
 
 
@@ -106,42 +110,26 @@ async def fetch_data_async(zip_codes, provider):
 
     return results
 
-def search_healthcare_providers(zip_code, provider, radius):
-    zip_codes = Zip_codes(zip_code, radius)
-    final = []
-
-    try:
-        results = asyncio.run(fetch_data_async(zip_codes, provider))
-
-        for result_set in results:
-            if isinstance(result_set, list):  # Check if result_set is a list
-                for result in result_set:
-                    npi_number = result.get("number", "")
-                    organization_name = result.get("basic", {}).get("organization_name")
-                    addresses = result.get("addresses", [{}])[0]
-                    if addresses:
-                        telephone_number = addresses.get("telephone_number", "")
-                        postal_code = addresses.get("postal_code", "")[:5]
-                        address = ", ".join(filter(None, [addresses.get("address_1", ""), addresses.get("address_2", ""), addresses.get("city", ""), addresses.get("state", ""), postal_code]))
-                        information = {
-                            "organization": organization_name,
-                            "phone": telephone_number,
-                            "address": address,
-                            "NPI": npi_number
-                        }
-                        final.append(information)
-
-    except Exception as e:
-        st.error(f"Exception: {e}")
-
-    return final
-
-
-'''
 
 def search_healthcare_providers(zip_code, provider, radius):
-    zip_codes = Zip_codes(zip_code, radius)
+    # Fetch data for the provided zip code
+    zip_codes = [zip_code]
+
+    # If a valid zip code is provided, fetch data for surrounding zip codes
+    if zip_code.strip():
+        zip_codes += Zip_codes(zip_code, radius)
+
     final = []
+    
+     # Geolocate the provided ZIP code
+    geolocator = Bing(api_key="AiD2FXje7LL88RhGVmH1mhdAr1-LQC2aApNC1oPG3Psnj_4NStiayQh_Vuct1moh")
+
+    location_zip = geolocator.geocode(zip_code)
+    
+    if location_zip is None:
+        return False
+    
+    zip_coords = (location_zip.latitude, location_zip.longitude)
 
     # Batch the parameters for multiple API calls
     parameters_list = [
@@ -176,17 +164,19 @@ def search_healthcare_providers(zip_code, provider, radius):
                     postal_code = addresses.get("postal_code", "")[:5]  # Extract first 5 digits of the postal code
                     address = ", ".join(filter(None, [addresses.get("address_1", ""), addresses.get("address_2", ""), addresses.get("city", ""), addresses.get("state", ""), postal_code]))
                     # Process address and telephone number
-
-              
-
-                # Create information dictionary and append to 'final' list
-                information = {
-                    "organization": organization_name,
-                    "phone": telephone_number,
-                    "address": address,
-                    "NPI":npi_number
-                }
-                final.append(information)
+                    location = geolocator.geocode(address)
+                    if location is not None:
+                        address_coords = (location.latitude, location.longitude)
+                        distance = geodesic(zip_coords, address_coords).miles
+                        if distance <= radius:
+                          # Create information dictionary and append to 'final' list
+                            information = {
+                                "organization": organization_name,
+                                "phone": telephone_number,
+                                "address": address,
+                                "NPI":npi_number
+                            }
+                            final.append(information)
 
     except requests.RequestException as e:
         # Handle request exceptions gracefully
@@ -194,7 +184,7 @@ def search_healthcare_providers(zip_code, provider, radius):
 
     return final
 
-'''
+
 def Zip_codes(zip, radius): 
     if zip is None or not zip.strip():
         st.warning('Please Enter a Valid Zip Code')
@@ -204,3 +194,20 @@ def Zip_codes(zip, radius):
     zcdb = ZipCodeDatabase()
     in_radius = [z.zip for z in zcdb.get_zipcodes_around_radius(zip, radius)]
     return in_radius
+
+
+"""
+start_time = time.time()
+
+doc = search_healthcare_providers('08054','dentist',5)
+if not doc:  # Check if the doc list is empty
+    print("No Results")
+else:
+    for i in doc: 
+        print(i)
+        
+
+end_time = time.time()
+execution_time = end_time - start_time
+print(f"Execution Time: {execution_time} seconds")
+"""

@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_folium import folium_static
 
-from map import location,are_within_radius
+from map import location
 from application import application_function
 from API import search_healthcare_providers,specific_provider
 from print import generate_pdf
@@ -21,13 +21,13 @@ def provider_page(provider ,code):
                 st.write(i['taxonomy_description']) 
                 st.button(f"Apply Here",on_click= app_page)
                 
-            #with right_column:
-                #map = location(info)
-                #if map:
-                    #st.write("Map exists.")
-                    #folium_static(map)
-                #else:
-                    #st.write("No vaild location found.")
+            with right_column:
+                map = location(info)
+                if map:
+                    st.write("Map exists.")
+                    folium_static(map)
+                else:
+                    st.write("No vaild location found.")
                     
         else:
             st.write("There no provider by that name")
@@ -38,8 +38,8 @@ def provider_page(provider ,code):
 def display_search_results(zip_code, provider, sort_option, radius):
    
       
-    doctors = search_healthcare_providers(zip_code, provider, radius)
-    doc = are_within_radius(zip_code,doctors,radius)
+    doc = search_healthcare_providers(zip_code, provider, radius)
+    
 
     # Sort the doctors based on the selected sorting option
     if sort_option == "Name  A-Z":
@@ -54,28 +54,15 @@ def display_search_results(zip_code, provider, sort_option, radius):
     # Create a two-column layout
     left_column, right_column = st.columns(2)
     
-    
-
-    if doc:
-        count = st.session_state.get("count", 5)
-        key = st.session_state.get("key", 1)
-        with left_column:
-            for i in doc[:count]:
-                display_doctor_info(i)
-                                 
-                    
-            if (len(doc)> count):
-                load = st.button("Load more", key = key)
-                if load:
-                    st.session_state.count += 5
-                    st.session_state.key += 1
-                    additional_results = doc[count : count + 5]
-
-                    for i in additional_results:
-                        display_doctor_info(i)
-                        
-                           
-            with right_column:
+    with left_column:
+         # Show the first five doctors
+        if doc:
+            num=1
+            for i in doc:
+                num +=1
+                display_doctor_info(i,num)
+              
+            #with right_column:
                 #map = location(doc)
                 #if map:
                     #st.write("Map exists.")
@@ -83,7 +70,7 @@ def display_search_results(zip_code, provider, sort_option, radius):
                 #else:
                     #st.write("No vaild location found.")
                 
-                pdf = generate_pdf(doctors)
+                pdf = generate_pdf(doc)
                 
                 if st.session_state.rerun_flag:
                      if st.download_button(
@@ -95,15 +82,15 @@ def display_search_results(zip_code, provider, sort_option, radius):
 
                 
 
-    else:
-        st.write("No results found.")
+        else:
+            st.write("No results found.")
 
-def display_doctor_info(doctor_info):
+def display_doctor_info(doctor_info,num):
     st.write("Organization Name:", doctor_info['organization'])
     st.write("Address: ", doctor_info['address'])
     st.write("Phone Number: ", doctor_info['phone'])
     number = doctor_info['NPI']
-    st.button(f"Apply Here",key = number,on_click= app_page)
+    st.button(f"Apply Here",key = num,on_click= app_page)
     
 
 def app_page():

@@ -12,7 +12,7 @@ st.write("")
 st.write("")
 st.write("")
 
-col1, col2 ,col3,col4= st.columns(4)
+col1, col2 ,col3,col4,col5, col6 ,col7= st.columns(7)
 
 with col1:
     st.image('Photos/T1.png')
@@ -21,21 +21,21 @@ with col1:
     
     
 
-with col2:
+with col3:
     st.image('Photos/T2.png')
     st.image('Photos/stars.png')
     st.markdown("<div style='text-align:Center;font-size: 20px; font-weight: bold; font-face:kadwa ;'>'Found great providers for my family!'</div>", unsafe_allow_html=True)
     
     
     
-with col3:
+with col5:
     st.image('Photos/T3.png')
     st.image('Photos/stars.png')
     st.markdown("<div style='text-align:Center;font-size: 20px; font-weight: bold; font-face:kadwa ;'>'10/10 recommend!'</div>", unsafe_allow_html=True)
     
     
     
-with col4:
+with col7:
     st.image('Photos/T4.png')
     st.image('Photos/stars.png')
     st.markdown("<div style='text-align:Center;font-size: 20px; font-weight: bold; font-face:kadwa ;'>'So glad I became part of the hive!'</div>", unsafe_allow_html=True)
