@@ -62,7 +62,7 @@ def display_search_results(zip_code, provider, sort_option, radius):
                 num +=1
                 display_doctor_info(i,num)
               
-            #with right_column:
+            with right_column:
                 #map = location(doc)
                 #if map:
                     #st.write("Map exists.")
@@ -72,13 +72,11 @@ def display_search_results(zip_code, provider, sort_option, radius):
                 
                 pdf = generate_pdf(doc)
                 
-                if st.session_state.rerun_flag:
-                     if st.download_button(
+                st.download_button(
                         label='Download Results',
                         data=pdf,
                         file_name='Doctor_results.pdf'
-                        ):
-                            st.session_state.rerun_flag = False
+                        )
 
                 
 
