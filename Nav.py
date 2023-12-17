@@ -73,10 +73,10 @@ def display_search_results(zip_code, provider, sort_option, radius):
                 pdf = generate_pdf(doc)
                 
                 st.download_button(
-                        label='Download Results',
-                        data=pdf,
-                        file_name='Doctor_results.pdf'
-                        )
+                    label='Download Results',
+                    data=pdf,
+                    file_name='Doctor_results.pdf'
+                    )
 
                 
 
@@ -99,7 +99,15 @@ def app_page():
 
     
 def Navigation():
-    
+    page_bg_img = '''
+        <style>
+        .main {
+        background: url("https://sa1s3optim.patientpop.com/1280x/filters:format(webp)/assets/production/practices/fc3fcb2fd0732ffac2aec3238492f240f15ea6d1/images/2614581.png") no-repeat center center/cover;
+        };
+        </style>
+        '''
+        
+    st.markdown(page_bg_img, unsafe_allow_html=True)
     tab1, tab2 =st.tabs(['Provider search', 'Health Credit provider'])
     
     with tab1:

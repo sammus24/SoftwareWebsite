@@ -2,6 +2,16 @@ import streamlit as st
 
 st.markdown("<h1 style='text-align: center; color: Black;text-decoration:underline; font-face: KODCHASAN;'>Testimonials</h1>", unsafe_allow_html=True)
 
+page_bg_img = '''
+        <style>
+        .main {
+        background: url("https://sa1s3optim.patientpop.com/1280x/filters:format(webp)/assets/production/practices/fc3fcb2fd0732ffac2aec3238492f240f15ea6d1/images/2614581.png") no-repeat center center/cover;
+        };
+        </style>
+        '''
+        
+st.markdown(page_bg_img, unsafe_allow_html=True)
+
 st.write("")
 st.write("")
 st.write("")
@@ -39,5 +49,5 @@ with col7:
     st.image('Photos/T4.png')
     st.image('Photos/stars.png')
     st.markdown("<div style='text-align:Center;font-size: 20px; font-weight: bold; font-face:kadwa ;'>'So glad I became part of the hive!'</div>", unsafe_allow_html=True)
-    
+st.session_state.page = 'main'    
     

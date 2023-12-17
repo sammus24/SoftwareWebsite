@@ -66,6 +66,16 @@ def main_page():
         </script>
         """
         st.markdown(html + js_script, unsafe_allow_html=True)
+        
+        page_bg_img = '''
+        <style>
+        .main {
+        background: url("https://sa1s3optim.patientpop.com/1280x/filters:format(webp)/assets/production/practices/fc3fcb2fd0732ffac2aec3238492f240f15ea6d1/images/2614581.png") no-repeat center center/cover;
+        };
+        </style>
+        '''
+        
+        st.markdown(page_bg_img, unsafe_allow_html=True)
 
         # Listen for the click event
         if st.session_state.get('navigation'):
@@ -89,12 +99,17 @@ def main():
 
     if st.session_state.page == 'main':
         # Render your main_page function here
+        clear_page()
         main_page()
 
     if st.session_state.page == 'navigation':
         # Render Navigation function here
         clear_page()
         Navigation()
+        if st.button('Back'):
+            st.session_state.page = 'main'
+            st.session_state.rerun_flag = True  # Set a flag to indicate rerun
+            st.rerun()
 
 
 # Call the main function to start the app
