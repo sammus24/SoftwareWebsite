@@ -58,10 +58,21 @@ def display_search_results(zip_code, provider, sort_option, radius):
          # Show the first five doctors
         if doc:
             num=1
+            """
+            scrollable_list = ""
+            for i, doctor in enumerate(doc, start=1):
+                num +=1
+                scrollable_list += f"Organization Name: {doctor['organization']}\n"
+                scrollable_list += f"\nAddress: {doctor['address']}\n"
+                scrollable_list += f"\nPhone Number: {doctor['phone']}\n\n"# Display the scrollable box containing doctor information
+                scrollable_list += st.button(f"Apply Here - {doctor['organization']}", key=f"apply_{i}", on_click=app_page)
+                scrollable_list += "\n---\n"
+            st.markdown(f'<div style="overflow-y: scroll; height: 400px;">{scrollable_list}</div>', unsafe_allow_html=True)
+            """
             for i in doc:
                 num +=1
                 display_doctor_info(i,num)
-              
+            
             with right_column:
                 #map = location(doc)
                 #if map:
@@ -126,7 +137,7 @@ def Navigation():
             "Psychiatrist", "Counselor", "Surgery"))
         sort_option = st.selectbox("Sort Results By:", ["Name A-Z",'Name Z-A', "Address"])
         # clear the search box
-
+        
         if st.button("Search",key = 'multiple'):
             # Check if the entered ZIP code is valid
             if provider == 'Blank':
@@ -136,6 +147,7 @@ def Navigation():
                     display_search_results(zip_code, provider, sort_option, radius)
                 else:
                     st.warning('Please Enter a Valid 5-digit ZIP Code') 
+            
     with tab2:
         st.title("Find out if your Doctor is a Health Credit provider")
         code = st.text_input("ZIP code:")

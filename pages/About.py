@@ -30,11 +30,13 @@ with col1:
 with col2:
     
     st.image("Photos/about2.png", width=376)
+    
+st.header("Our Team")
 
 left_column, right_column = st.columns(2)
 
 with left_column: 
-    st.header("Our Team")
+    
     
     # First three team members
     team_members_left = [
@@ -49,8 +51,7 @@ with left_column:
 
 with right_column:
    
-    st.write("")
-    st.write("")
+   
     
     # Last three team members
     team_members_right = [

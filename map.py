@@ -18,7 +18,7 @@ def location(doctor):
                 lat = location.latitude
                 lon = location.longitude
                 # Add a marker for each doctor's location
-                folium.Marker([lat, lon], popup="Doctor").add_to(my_map)
+                folium.Marker([lat, lon], popup="Doctor",tooltip=(i['org_name'],i['address'])).add_to(my_map)
         except Exception as e:
             st.write(f"Error getting location for {i['address']}: {e}")
     if my_map:
