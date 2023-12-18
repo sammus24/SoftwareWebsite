@@ -16,8 +16,8 @@ def provider_page(provider ,code):
         info = specific_provider(provider, code)
         if info:
             for i in info:
-                st.write(i['org_name'])
-                st.write(i['telephone_number'])
+                st.write(i['organization'])
+                st.write(i['phone'])
                 st.write(i['taxonomy_description']) 
                 st.button(f"Apply Here",on_click= app_page)
                 
@@ -55,31 +55,18 @@ def display_search_results(zip_code, provider, sort_option, radius):
     left_column, right_column = st.columns(2)
     
     with left_column:
-         # Show the first five doctors
         if doc:
             num=1
-            """
-            scrollable_list = ""
-            for i, doctor in enumerate(doc, start=1):
-                num +=1
-                scrollable_list += f"Organization Name: {doctor['organization']}\n"
-                scrollable_list += f"\nAddress: {doctor['address']}\n"
-                scrollable_list += f"\nPhone Number: {doctor['phone']}\n\n"# Display the scrollable box containing doctor information
-                scrollable_list += st.button(f"Apply Here - {doctor['organization']}", key=f"apply_{i}", on_click=app_page)
-                scrollable_list += "\n---\n"
-            st.markdown(f'<div style="overflow-y: scroll; height: 400px;">{scrollable_list}</div>', unsafe_allow_html=True)
-            """
             for i in doc:
                 num +=1
                 display_doctor_info(i,num)
             
             with right_column:
-                #map = location(doc)
-                #if map:
-                    #st.write("Map exists.")
-                    #folium_static(map)
-                #else:
-                    #st.write("No vaild location found.")
+                map = location(doc)
+                if map:
+                    folium_static(map)
+                else:
+                    st.write("No vaild location found.")
                 
                 pdf = generate_pdf(doc)
                 

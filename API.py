@@ -74,9 +74,9 @@ def specific_provider(provider, code):
 
                 # Create information dictionary and append to 'info' list
                 information = {
-                    "org_name": organization_name,
+                    "organization": organization_name,
                     "taxonomy_description": taxonomy_desc,
-                    "telephone_number": telephone_number,
+                    "phone": telephone_number,
                     "address": address
                 }
                 info.append(information)
@@ -195,19 +195,3 @@ def Zip_codes(zip, radius):
     in_radius = [z.zip for z in zcdb.get_zipcodes_around_radius(zip, radius)]
     return in_radius
 
-
-"""
-start_time = time.time()
-
-doc = search_healthcare_providers('08054','dentist',5)
-if not doc:  # Check if the doc list is empty
-    print("No Results")
-else:
-    for i in doc: 
-        print(i)
-        
-
-end_time = time.time()
-execution_time = end_time - start_time
-print(f"Execution Time: {execution_time} seconds")
-"""
